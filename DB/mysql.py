@@ -47,14 +47,13 @@ class mysql(object):
     
     def grant_user(self, user_name, pwd, target, privileges, host="localhost"):
         query_string = "GRANT "+privileges+" ON "+target+" TO '"+user_name+"'@'"+host+"'"
-        print(query_string)
         self.query(query_string)
         
     def host_exists(self, host):
         return True
         
     def importDump(self, user_name, pwd, target, dump_file):
-        proc = subprocess.Popen(["mysql", "--user=%s" % user_name, "--password=%s" % pwd, "database"], stdin=subprocess.PIPE,
+        proc = subprocess.Popen(["mysql", "--user=%s" % user_name, "--password=%s" % pwd, target], stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE)
         out, err = proc.communicate(file(dump_file).read())
         return out

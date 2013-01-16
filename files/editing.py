@@ -36,7 +36,7 @@ class editor(object):
         directly into memory.
         '''
         self._file_control.seek(0)
-        self._file_contents = self.file_control.read()
+        self._file_contents = self._file_control.read()
     
     def replaceText(self, expression, replacement):
         '''
@@ -55,6 +55,8 @@ class editor(object):
         '''
         Saves the loaded file and closes the handler.
         '''
+        filename = self._file_control.name
+        self._file_control = open(filename, 'w')
         self._file_control.write(self._file_contents)
         self._file_control.close()
         return True    

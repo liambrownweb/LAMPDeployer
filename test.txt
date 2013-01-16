@@ -1,0 +1,7 @@
+this is line 1
+this is line 2
+this is the third line of the file
+I love the fourth line.
+And the fifth line will almost be the last...
+
+But not quite. The sixth was blank, so I the seventh speak for myself and my blank brother.

@@ -3,14 +3,18 @@ Created on Jan 4, 2013
 
 @author: Liam Brown
 '''
-import DB, files, getopt, os, sys, tarfile, traceback
+import abc, DB, files, getopt, os, sys, tarfile, traceback
 
-class view():
+class view(object):
     '''
     An abstract class for views to connect to the deployer
     '''
+    __metaclass__ = abc.ABCMeta
+    _controller = None
+    
+    @abc.abstractmethod
     def userMessage(self, output):
-        raise NotImplementedError("This is an interface method. You need to implement this.") 
+        return
     
 class deployer(object):
 
@@ -34,6 +38,9 @@ class deployer(object):
         '''
         Constructor
         '''
+        if params != None:
+            if params.has_key("view"):
+                self._view = params['view']
         self._mysql_control = DB.mysql.mysql(None)
         self._file_editor = files.editing.editor()
         self._inputs_required = [{"param":"-s",
@@ -75,7 +82,7 @@ class deployer(object):
     def connectView(self, view):
         self._view = view
         
-    def error(self, message):
+    def error(self, message, exit = False):
         '''
         Standardizes error messages and provides a clean exit for any error.
         
@@ -85,8 +92,10 @@ class deployer(object):
             msg = str(message)
         else:
             msg = message
-        self._view.userMessage("\n" + msg + "\n" + traceback.print_exc(file=sys.stdout))
-        sys.exit(2)
+        self._view.userMessage("\n" + msg + "\n")
+        self._view.userMessage(str(traceback.print_exc()))
+        if exit:
+            sys.exit(2)
     
     def importDatabase(self, instance_name, dump_file, user, password):
         '''
